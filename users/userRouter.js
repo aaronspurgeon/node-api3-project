@@ -20,9 +20,22 @@ router.post("/", validateUser(), (req, res, next) => {
     });
 });
 
-router.post("/:id/posts", (req, res, next) => {
-  // do your magic!
-});
+router.post(
+  "/:id/posts",
+  validateUserId(),
+  validatePost(),
+  (req, res, next) => {
+    // do your magic!
+    posts
+      .insert({ ...req.body, user_id: req.params.id })
+      .then(post => {
+        res.status(201).json(post);
+      })
+      .catch(error => {
+        next(error);
+      });
+  }
+);
 
 router.get("/", (req, res, next) => {
   // do your magic!
