@@ -1,8 +1,9 @@
 const express = require("express");
 const db = require("./postDb");
+const { validatePostId } = require("../middleware/validate");
 const router = express.Router();
 
-router.get("/", (req, res) => {
+router.get("/", (req, res, next) => {
   // do your magic!
   const opts = {
     limit: req.query.limit,
@@ -15,14 +16,16 @@ router.get("/", (req, res) => {
       res.status(200).json(post);
     })
     .catch(err => {
-      res.status(500).json({
-        message: "Error Retrieving post."
-      });
+      // res.status(500).json({
+      //   message: "Error Retrieving post."
+      // });
+      next(err);
     });
 });
 
-router.get("/:id", (req, res) => {
+router.get("/:id", validatePostId(), (req, res) => {
   // do your magic!
+  res.json(req.post);
 });
 
 router.delete("/:id", (req, res) => {
@@ -34,9 +37,5 @@ router.put("/:id", (req, res) => {
 });
 
 // custom middleware
-
-function validatePostId(req, res, next) {
-  // do your magic!
-}
 
 module.exports = router;
