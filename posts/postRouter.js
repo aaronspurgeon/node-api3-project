@@ -28,8 +28,17 @@ router.get("/:id", validatePostId(), (req, res) => {
   res.json(req.post);
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", validatePostId(), (req, res, next) => {
   // do your magic!
+  db.remove(req.post.id)
+    .then(count => {
+      res.status(200).json({
+        message: "The post has been deleted"
+      });
+    })
+    .catch(err => {
+      next(err);
+    });
 });
 
 router.put("/:id", (req, res) => {
