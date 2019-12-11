@@ -3,9 +3,11 @@ const express = require("express");
 const logger = require("./middleware/logger");
 const postRouter = require("./posts/postRouter");
 const userRouter = require("./users/userRouter");
+const cors = require("cors");
 
 const server = express();
 
+server.use(cors());
 server.use(logger);
 server.use(express.json());
 
