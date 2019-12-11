@@ -1,6 +1,6 @@
 const express = require("express");
 const db = require("./postDb");
-const { validatePostId } = require("../middleware/validate");
+const { validatePostId, validatePostData } = require("../middleware/validate");
 const router = express.Router();
 
 router.get("/", (req, res, next) => {
@@ -41,8 +41,15 @@ router.delete("/:id", validatePostId(), (req, res, next) => {
     });
 });
 
-router.put("/:id", (req, res) => {
+router.put("/:id", validatePostData(), validatePostId(), (req, res) => {
   // do your magic!
+  db.update(req.post.id, req.body)
+    .then(post => {
+      res.status(200).json(post);
+    })
+    .catch(err => {
+      next(err);
+    });
 });
 
 // custom middleware

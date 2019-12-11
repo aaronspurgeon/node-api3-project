@@ -20,6 +20,18 @@ function validatePostId() {
   };
 }
 
+function validatePostData() {
+  return (req, res, next) => {
+    if (!req.body.text) {
+      return res.status(400).json({
+        message: "Missing input fields."
+      });
+    }
+    next();
+  };
+}
+
 module.exports = {
-  validatePostId
+  validatePostId,
+  validatePostData
 };
