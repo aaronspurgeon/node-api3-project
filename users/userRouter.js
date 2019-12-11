@@ -9,11 +9,18 @@ const router = express.Router();
 //   update,
 //   remove,
 
-router.post("/", (req, res) => {
+router.post("/", validateUser(), (req, res, next) => {
   // do your magic!
+  db.insert(req.body)
+    .then(user => {
+      res.status(200).json(user);
+    })
+    .catch(err => {
+      next(err);
+    });
 });
 
-router.post("/:id/posts", (req, res) => {
+router.post("/:id/posts", (req, res, next) => {
   // do your magic!
 });
 
@@ -44,12 +51,28 @@ router.get("/:id/posts", validateUserId(), (req, res, next) => {
     });
 });
 
-router.delete("/:id", validateUserId(), (req, res) => {
+router.delete("/:id", validateUserId(), (req, res, next) => {
   // do your magic!
+  db.remove(req.user.id)
+    .then(count => {
+      res.status(200).json({
+        message: "User was deleted"
+      });
+    })
+    .catch(err => {
+      next(err);
+    });
 });
 
-router.put("/:id", validateUserId(), (req, res) => {
+router.put("/:id", validateUser(), validateUserId(), (req, res) => {
   // do your magic!
+  db.update(req.user.id, req.body)
+    .then(user => {
+      res.status(200).json(user);
+    })
+    .catch(err => {
+      next(err);
+    });
 });
 
 //custom middleware
