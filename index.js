@@ -27,6 +27,9 @@ server.use((err, req, res, next) => {
   });
 });
 
-server.listen(8080, () => {
-  console.log("\n*** Server Running on http://localhost:8080 ***\n");
+const host = process.env.HOST || "0.0.0.0";
+const port = process.env.PORT || 8080;
+
+server.listen(port, host, () => {
+  console.log("app running");
 });
